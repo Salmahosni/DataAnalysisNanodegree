@@ -1,0 +1,55 @@
+/* Q1- Number of customers per each sale rep*/
+
+SELECT e.FirstName || " " || e.LastName employee_name,
+       count(*) customers_no
+FROM Customer C
+JOIN Employee E ON C.SupportRepId = E.EmployeeId
+GROUP BY 1;
+
+
+
+
+/*Q2- the highest total sale albumn*/
+
+SELECT Album.Title,
+       SUM(il.UnitPrice) total_sale
+FROM track t
+JOIN InvoiceLine il ON il.TrackId= t.TrackId
+JOIN Album ON Album.AlbumId = t.AlbumId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
+
+
+
+
+/*Q-3 the Top 5 most popular Genre in Canada*/
+
+SELECT g.name genre_name,
+       count(*) tracks_count
+FROM genre g
+JOIN track t ON g.GenreId = t.GenreId
+JOIN InvoiceLine il ON il.TrackId= t.TrackId
+JOIN Invoice i ON il.InvoiceId = i.InvoiceId
+JOIN Customer c ON i.CustomerId = c.CustomerId
+WHERE c.Country = 'Canada'
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5
+
+
+
+
+/*Q-4 TOP 5 POPULAR ARTIST IN 2013*/
+
+SELECT artist.name artist_name,
+       COUNT (*) sold_tracks
+FROM track t
+JOIN InvoiceLine il ON il.TrackId= t.TrackId
+JOIN Invoice i ON il.InvoiceId = i.InvoiceId
+JOIN Album ON Album.AlbumId = t.AlbumId
+JOIN Artist ON Artist.ArtistId = Album.ArtistId
+WHERE STRFTIME('%Y', i.InvoiceDate) = '2013'
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5
